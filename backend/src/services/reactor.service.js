@@ -1,6 +1,4 @@
-// Ejercicio 1: "Estabiliza el Reactor"
-// Estado en memoria: la temperatura objetivo vive solo en el servidor.
-const generarTemperatura = () => Math.floor(Math.random() * 100) + 1; // 1..100
+const generarTemperatura = () => Math.floor(Math.random() * 100) + 1; 
 
 let temperaturaEstabilizacion = generarTemperatura();
 
@@ -18,5 +16,4 @@ export const reiniciar = () => {
   temperaturaEstabilizacion = generarTemperatura();
 };
 
-// Solo para pruebas/depuración en consola del servidor.
 export const _verObjetivo = () => temperaturaEstabilizacion;
