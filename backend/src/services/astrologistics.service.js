@@ -158,3 +158,38 @@ export function actualizarUnidades(id, cantidad) {
   // Devolvemos la carga actualizada.
   return { carga: obtenerCarga() };
 }
+
+// Función para eliminar un suministro de la nave.
+export function eliminarSuministro(id) {
+
+  // Convertimos el ID recibido a número.
+  const equipoId = Number(id);
+
+  // Verificamos que el ID sea válido.
+  if (!Number.isInteger(equipoId) || equipoId <= 0) {
+    return { error: "ID inválido", status: 400 };
+  }
+
+  // Buscamos la posición del producto en la carga.
+  const posicion = itemsCargados.findIndex(p => p.id === equipoId);
+
+  // Si no está en la nave, devolvemos un error.
+  if (posicion === -1) {
+    return { error: "Suministro no encontrado en la nave", status: 404 };
+  }
+
+  // Obtenemos el producto cargado.
+  const item = itemsCargados[posicion];
+
+  // Buscamos el producto en el inventario.
+  const producto = inventario.find(p => p.id === equipoId);
+
+  // Devolvemos las unidades al inventario general.
+  producto.stock += item.cantidad;
+
+  // Eliminamos el producto de la carga.
+  itemsCargados.splice(posicion, 1);
+
+  // Devolvemos la carga actualizada.
+  return { carga: obtenerCarga() };
+}

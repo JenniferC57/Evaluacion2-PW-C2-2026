@@ -1,6 +1,7 @@
 
 import { Router } from "express";
-import { obtenerInventario , obtenerCarga , agregarSuministro , actualizarUnidades} from "../services/astrologistics.service.js";
+import { obtenerInventario , obtenerCarga , agregarSuministro ,
+     actualizarUnidades , eliminarSuministro} from "../services/astrologistics.service.js";
 
 const router = Router();
 
@@ -56,6 +57,28 @@ router.put("/carga/actualizar-unidades/:id", (req, res) => {
   // Si todo salió bien, devolvemos la carga actualizada.
   res.status(200).json(resultado.carga);
 });
+
+// Ruta para eliminar un suministro de la nave.
+router.delete("/carga/eliminar/:id", (req, res) => {
+
+  // Obtenemos el ID del producto desde la URL.
+  const { id } = req.params;
+
+  // Llamamos al servicio para eliminar el suministro.
+  const resultado = eliminarSuministro(id);
+
+  // Si ocurre un error, devolvemos el mensaje.
+  if (resultado.error) {
+    return res.status(resultado.status).json({
+      mensaje: resultado.error
+    });
+  }
+
+  // Devolvemos la carga actualizada.
+  res.status(200).json(resultado.carga);
+});
+
+
 
 export default router;
 
