@@ -41,3 +41,26 @@ const inventario = [
 export function obtenerInventario() {
   return inventario;
 }
+
+// Presupuesto inicial que tiene el capitán.
+const presupuestoInicial = 500;
+
+// Aquí guardaremos los productos agregados a la nave.
+const itemsCargados = [];
+
+// Función para consultar la carga de la nave.
+export function obtenerCarga() {
+
+  // Calculamos el costo de los productos cargados.
+  const total = itemsCargados.reduce((suma, item) => {
+    const producto = inventario.find(p => p.id === item.id);
+    return suma + (producto ? producto.precio * item.cantidad : 0);
+  }, 0);
+
+  // Devolvemos los créditos restantes y la carga actual.
+  return {
+    creditos: presupuestoInicial - total,
+    itemsCargados: itemsCargados,
+    total: total
+  };
+}
