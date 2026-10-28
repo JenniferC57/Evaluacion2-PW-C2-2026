@@ -193,3 +193,49 @@ export function eliminarSuministro(id) {
   // Devolvemos la carga actualizada.
   return { carga: obtenerCarga() };
 }
+
+// Tiempo máximo de la misión: 5 minutos.
+const DURACION_MISION = 5 * 60 * 1000;
+
+// Guardamos el momento en que inicia la misión.
+let inicioMision = Date.now();
+
+// Función para consultar el tiempo disponible.
+export function obtenerEstadoMision() {
+  const tiempoTranscurrido = Date.now() - inicioMision;
+
+  const segundosRestantes = Math.max(
+    0,
+    Math.ceil((DURACION_MISION - tiempoTranscurrido) / 1000)
+  );
+
+  return {
+    activa: segundosRestantes > 0,
+    segundosRestantes: segundosRestantes
+  };
+}
+
+// Función para iniciar una nueva misión.
+export function reiniciarMision() {
+
+  // Devolvemos los suministros cargados al inventario.
+  itemsCargados.forEach(item => {
+    const producto = inventario.find(p => p.id === item.id);
+
+    if (producto) {
+      producto.stock += item.cantidad;
+    }
+  });
+
+  // Vaciamos la nave.
+  itemsCargados.length = 0;
+
+  // Reiniciamos el tiempo de la misión.
+  inicioMision = Date.now();
+
+  return {
+    mensaje: "Nueva misión iniciada",
+    ...obtenerEstadoMision(),
+    ...obtenerCarga()
+  };
+}
