@@ -64,3 +64,53 @@ export function obtenerCarga() {
     total: total
   };
 }
+
+
+// Función para agregar suministros a la nave.
+export function agregarSuministro(equipoId, cantidad) {
+
+  // Convertimos los datos recibidos a números.
+  const id = Number(equipoId);
+  const unidades = Number(cantidad);
+
+  // Comprobamos que los datos sean válidos.
+  if (!Number.isInteger(id) || !Number.isInteger(unidades) || unidades <= 0) {
+    return { error: "Datos inválidos", status: 400 };
+  }
+
+  // Buscamos el producto en el inventario.
+  const producto = inventario.find(p => p.id === id);
+
+  if (!producto) {
+    return { error: "Producto no encontrado", status: 404 };
+  }
+
+  // Verificamos que haya suficientes unidades.
+  if (producto.stock < unidades) {
+    return { error: "Stock en base insuficiente", status: 400 };
+  }
+
+  // Calculamos cuánto costarán las nuevas unidades.
+  const costo = producto.precio * unidades;
+  const cargaActual = obtenerCarga();
+
+  // Verificamos que el presupuesto alcance.
+  if (cargaActual.creditos < costo) {
+    return { error: "Créditos insuficientes", status: 400 };
+  }
+
+  // Comprobamos si el producto ya está en la nave.
+  const item = itemsCargados.find(p => p.id === id);
+
+  if (item) {
+    item.cantidad += unidades;
+  } else {
+    itemsCargados.push({ id: id, cantidad: unidades });
+  }
+
+  // Descontamos las unidades del inventario disponible.
+  producto.stock -= unidades;
+
+  // Devolvemos la carga actualizada.
+  return { carga: obtenerCarga() };
+}

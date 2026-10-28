@@ -1,6 +1,6 @@
 
 import { Router } from "express";
-import { obtenerInventario , obtenerCarga } from "../services/astrologistics.service.js";
+import { obtenerInventario , obtenerCarga , agregarSuministro} from "../services/astrologistics.service.js";
 
 const router = Router();
 
@@ -16,4 +16,26 @@ router.get("/carga", (req, res) => {
   res.json(carga);
 });
 
+// Ruta para agregar suministros a la nave.
+router.post("/carga/agregar", (req, res) => {
+
+  // Recibimos el ID y la cantidad enviados por el cliente.
+  const { equipoId, cantidad } = req.body;
+
+  // Llamamos a la función que agrega el producto.
+  const resultado = agregarSuministro(equipoId, cantidad);
+
+  // Si ocurre un error, enviamos el mensaje correspondiente.
+  if (resultado.error) {
+    return res.status(resultado.status).json({
+      mensaje: resultado.error
+    });
+  }
+
+  // Si todo salió bien, devolvemos la carga actualizada.
+  res.status(200).json(resultado.carga);
+});
+
 export default router;
+
+
