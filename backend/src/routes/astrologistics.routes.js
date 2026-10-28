@@ -1,8 +1,14 @@
 
 import { Router } from "express";
 import {
-    obtenerInventario, obtenerCarga, agregarSuministro,
-    actualizarUnidades, eliminarSuministro, obtenerEstadoMision, reiniciarMision
+    obtenerInventario, 
+    obtenerCarga, 
+    agregarSuministro,
+    actualizarUnidades, 
+    eliminarSuministro, 
+    obtenerEstadoMision, 
+    reiniciarMision , 
+    confirmarCarga 
 } from "../services/astrologistics.service.js";
 
 const router = Router();
@@ -24,6 +30,25 @@ function verificarTiempoMision(req, res, next) {
 }
 
 
+// Verificamos que la carga no haya sido confirmada.
+function verificarCargaNoConfirmada(req, res, next) {
+
+  // Consultamos el estado actual de la carga.
+  const carga = obtenerCarga();
+
+  // Si ya fue confirmada, bloqueamos los cambios.
+  if (carga.confirmada) {
+    return res.status(403).json({
+      mensaje: "La carga ya fue confirmada. Inicia una nueva misión."
+    });
+  }
+
+  // Si todavía no está confirmada, permitimos continuar.
+  next();
+}
+
+
+
 // Ruta que devuelve todos los productos del inventario.
 router.get("/inventario", (req, res) => {
     const inventario = obtenerInventario();
@@ -37,7 +62,8 @@ router.get("/carga", (req, res) => {
 });
 
 // Ruta para agregar suministros a la nave.
-router.post("/carga/agregar", verificarTiempoMision, (req, res) => {
+
+router.post("/carga/agregar", verificarTiempoMision, verificarCargaNoConfirmada, (req, res) => {
 
     // Recibimos el ID y la cantidad enviados por el cliente.
     const { equipoId, cantidad } = req.body;
@@ -58,7 +84,8 @@ router.post("/carga/agregar", verificarTiempoMision, (req, res) => {
 
 // Ruta para actualizar las unidades de un producto en la nave.
 
-router.put("/carga/actualizar-unidades/:id", verificarTiempoMision, (req, res) => {
+
+router.put("/carga/actualizar-unidades/:id", verificarTiempoMision, verificarCargaNoConfirmada, (req, res) => {
 
     // Obtenemos el ID de la URL y la cantidad enviada.
     const { id } = req.params;
@@ -80,7 +107,8 @@ router.put("/carga/actualizar-unidades/:id", verificarTiempoMision, (req, res) =
 
 // Ruta para eliminar un suministro de la nave.
 
-router.delete("/carga/eliminar/:id", verificarTiempoMision, (req, res) => {
+
+router.delete("/carga/eliminar/:id", verificarTiempoMision, verificarCargaNoConfirmada, (req, res) => {
 
     // Obtenemos el ID del producto desde la URL.
     const { id } = req.params;
@@ -109,6 +137,23 @@ router.get("/mision", (req, res) => {
 router.post("/mision/reiniciar", (req, res) => {
     const resultado = reiniciarMision();
     res.json(resultado);
+});
+
+// Ruta para confirmar el equipamiento de la nave.
+router.post("/carga/confirmar", verificarTiempoMision, (req, res) => {
+
+  // Llamamos al servicio para confirmar la carga.
+  const resultado = confirmarCarga();
+
+  // Si ocurre un error, devolvemos el mensaje.
+  if (resultado.error) {
+    return res.status(resultado.status).json({
+      mensaje: resultado.error
+    });
+  }
+
+  // Devolvemos la confirmación al cliente.
+  res.status(200).json(resultado);
 });
 
 export default router;

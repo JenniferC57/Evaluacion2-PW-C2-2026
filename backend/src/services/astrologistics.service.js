@@ -48,6 +48,9 @@ const presupuestoInicial = 500;
 // Aquí guardaremos los productos agregados a la nave.
 const itemsCargados = [];
 
+// Indica si el capitán ya confirmó su equipamiento.
+let cargaConfirmada = false;
+
 // Función para consultar la carga de la nave.
 export function obtenerCarga() {
 
@@ -58,11 +61,14 @@ export function obtenerCarga() {
   }, 0);
 
   // Devolvemos los créditos restantes y la carga actual.
-  return {
-    creditos: presupuestoInicial - total,
-    itemsCargados: itemsCargados,
-    total: total
-  };
+ 
+return {
+  creditos: presupuestoInicial - total,
+  itemsCargados: itemsCargados,
+  total: total,
+  confirmada: cargaConfirmada
+};
+
 }
 
 
@@ -230,6 +236,9 @@ export function reiniciarMision() {
   // Vaciamos la nave.
   itemsCargados.length = 0;
 
+// Permitimos preparar una nueva carga.
+cargaConfirmada = false;
+
   // Reiniciamos el tiempo de la misión.
   inicioMision = Date.now();
 
@@ -237,5 +246,28 @@ export function reiniciarMision() {
     mensaje: "Nueva misión iniciada",
     ...obtenerEstadoMision(),
     ...obtenerCarga()
+  };
+}
+
+
+// Función para confirmar el equipamiento de la nave.
+export function confirmarCarga() {
+
+  // Verificamos que haya productos cargados.
+  if (itemsCargados.length === 0) {
+    return { error: "La nave no tiene suministros", status: 400 };
+  }
+
+  // Evitamos confirmar la carga dos veces.
+  if (cargaConfirmada) {
+    return { error: "La carga ya fue confirmada", status: 400 };
+  }
+
+  // Confirmamos el equipamiento.
+  cargaConfirmada = true;
+
+  return {
+    mensaje: "Equipamiento confirmado correctamente",
+    carga: obtenerCarga()
   };
 }
