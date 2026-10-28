@@ -114,3 +114,47 @@ export function agregarSuministro(equipoId, cantidad) {
   // Devolvemos la carga actualizada.
   return { carga: obtenerCarga() };
 }
+
+
+// Función para actualizar la cantidad de un suministro en la nave.
+export function actualizarUnidades(id, cantidad) {
+
+  // Convertimos los datos recibidos a números.
+  const equipoId = Number(id);
+  const nuevaCantidad = Number(cantidad);
+
+  // Verificamos que los valores sean correctos.
+  if (!Number.isInteger(equipoId) || !Number.isInteger(nuevaCantidad) || nuevaCantidad <= 0) {
+    return { error: "Cantidad o ID inválido", status: 400 };
+  }
+
+  // Buscamos el suministro que ya está cargado.
+  const item = itemsCargados.find(p => p.id === equipoId);
+
+  if (!item) {
+    return { error: "Suministro no encontrado en la nave", status: 404 };
+  }
+
+  // Buscamos el producto en el inventario.
+  const producto = inventario.find(p => p.id === equipoId);
+
+  // Calculamos cuántas unidades aumentan o disminuyen.
+  const diferencia = nuevaCantidad - item.cantidad;
+
+  // Si aumentamos unidades, verificamos el stock disponible.
+  if (diferencia > 0 && producto.stock < diferencia) {
+    return { error: "Stock en base insuficiente", status: 400 };
+  }
+
+  // Comprobamos si alcanzan los créditos para aumentar.
+  if (diferencia > 0 && diferencia * producto.precio > obtenerCarga().creditos) {
+    return { error: "Créditos insuficientes para esta cantidad", status: 400 };
+  }
+
+  // Actualizamos las unidades de la nave y del inventario.
+  item.cantidad = nuevaCantidad;
+  producto.stock -= diferencia;
+
+  // Devolvemos la carga actualizada.
+  return { carga: obtenerCarga() };
+}
