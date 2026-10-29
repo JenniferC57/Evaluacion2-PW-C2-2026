@@ -1,9 +1,10 @@
+import Reactor from "./src/components/Reactor.jsx";
 import { useState, useEffect } from "react";
 import { Container, Row, Col, Alert, Button, Spinner, UncontrolledAlert } from "reactstrap";
-import PanelMision from "./components/PanelMision.jsx";
-import Catalogo from "./components/Catalogo.jsx";
-import Bodega from "./components/Bodega.jsx";
-import MisionTerminada from "./components/MisionTerminada.jsx";
+import PanelMision from "./src/components/PanelMision.jsx";
+import Catalogo from "./src/components/Catalogo.jsx";
+import Bodega from "./src/components/Bodega.jsx";
+import MisionTerminada from "./src/components/MisionTerminada.jsx";
 import {
   obtenerInventario,
   obtenerCarga,
@@ -13,9 +14,9 @@ import {
   eliminarSuministro,
   confirmarCarga,
   reiniciarMision,
-} from "./services/api.js";
+} from "./src/components/services/api.js";
 
-function App() {
+function AstroLogistics() {
   // ---------- ESTADOS ----------
 
   // Lista de suministros de la base (array de objetos).
@@ -238,6 +239,20 @@ function App() {
           </Col>
         </Row>
       </Container>
+    </>
+  );
+}
+
+function App() {
+  const [pantalla, setPantalla] = useState("reactor");
+  return (
+    <>
+      <Container tag="nav" className="py-3 d-flex flex-wrap gap-2" aria-label="Ejercicios">
+        <Button color="primary" outline={pantalla !== "reactor"} aria-pressed={pantalla === "reactor"} onClick={() => setPantalla("reactor")}>Estabiliza el Reactor</Button>
+        <Button color="primary" outline={pantalla !== "mision"} aria-pressed={pantalla === "mision"} onClick={() => setPantalla("mision")}>AstroLogistics</Button>
+      </Container>
+      <div hidden={pantalla !== "reactor"}><Reactor /></div>
+      <div hidden={pantalla !== "mision"}>{pantalla === "mision" && <AstroLogistics />}</div>
     </>
   );
 }
