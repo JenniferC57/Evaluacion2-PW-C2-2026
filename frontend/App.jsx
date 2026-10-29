@@ -157,7 +157,6 @@ function AstroLogistics() {
     );
   }
 
-  // 2) Se acabó el tiempo de la misión.
   if (tiempoAgotado) {
     return (
       <Container className="py-5">
@@ -171,7 +170,7 @@ function AstroLogistics() {
     );
   }
 
-  // 3) Pantalla principal de la misión.
+
   return (
     <>
       {/* Zona fija arriba: panel de la misión y alerta de errores */}
