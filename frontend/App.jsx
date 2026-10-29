@@ -243,6 +243,7 @@ function AstroLogistics() {
   );
 }
 
+//Reactor
 function App() {
   const [pantalla, setPantalla] = useState("reactor");
   return (
