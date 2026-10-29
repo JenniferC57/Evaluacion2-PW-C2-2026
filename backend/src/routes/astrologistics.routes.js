@@ -15,7 +15,6 @@ const router = Router();
 function verificarTiempoMision(req, res, next) {
     const estado = obtenerEstadoMision();
 
-    // Si terminó el tiempo, no permitimos continuar.
     if (!estado.activa) {
         return res.status(403).json({
             mensaje: "Tiempo agotado. Debes iniciar una nueva misión."
@@ -50,20 +49,13 @@ router.get("/carga", (req, res) => {
 
 router.post("/carga/agregar", verificarTiempoMision, verificarCargaNoConfirmada, (req, res) => {
 
-    // Recibimos el ID y la cantidad enviados por el cliente.
     const { equipoId, cantidad } = req.body;
-
-    // Llamamos a la función que agrega el producto.
     const resultado = agregarSuministro(equipoId, cantidad);
-
-    // Si ocurre un error, enviamos el mensaje correspondiente.
     if (resultado.error) {
         return res.status(resultado.status).json({
             mensaje: resultado.error
         });
     }
-
-    // Si todo salió bien, devolvemos la carga actualizada.
     res.status(200).json(resultado.carga);
 });
 
