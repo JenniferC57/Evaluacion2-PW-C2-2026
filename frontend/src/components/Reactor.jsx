@@ -40,7 +40,6 @@ export default function Reactor() {
     setError("");
     try {
       const datos = await reiniciarReactor();
-      // Solo limpiar la sesión cuando el servidor confirme el reinicio.
       setTemperatura("");
       setHistorial([]);
       setEstabilizado(false);
