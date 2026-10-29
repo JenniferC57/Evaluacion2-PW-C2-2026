@@ -1,13 +1,10 @@
 import { Alert, Badge, Container, Spinner } from "reactstrap";
 
-// Panel superior: créditos, costo total, tiempo restante y estado "Calculando peso...".
 function PanelMision({ creditos, total, segundosRestantes, confirmada, cargando }) {
-  // Pasamos los segundos a formato minutos:segundos (ej. 4:05).
   const minutos = Math.floor(segundosRestantes / 60);
   const segundos = segundosRestantes % 60;
   const tiempoTexto = `${minutos}:${String(segundos).padStart(2, "0")}`;
 
-  // Cuando queda 1 minuto o menos, el tiempo se pinta en rojo.
   let colorTiempo = "success";
   if (segundosRestantes <= 60) {
     colorTiempo = "danger";

@@ -17,12 +17,8 @@ import {
 } from "./src/components/services/api.js";
 
 function AstroLogistics() {
-  // ---------- ESTADOS ----------
-
-  // Lista de suministros de la base (array de objetos).
   const [inventario, setInventario] = useState([]);
 
-  // Carga de la nave tal como la devuelve el backend (object).
   const [carga, setCarga] = useState({
     creditos: 0,
     itemsCargados: [],
@@ -30,21 +26,14 @@ function AstroLogistics() {
     confirmada: false,
   });
 
-  // Segundos que le quedan a la ventana de lanzamiento (number).
   const [segundosRestantes, setSegundosRestantes] = useState(0);
 
-  // Mensaje de error que devuelve el backend (string).
   const [error, setError] = useState("");
 
-  // true mientras esperamos la respuesta del servidor (boolean).
   const [cargando, setCargando] = useState(false);
 
-  // true cuando ya recibimos los datos del backend por primera vez (boolean).
   const [conectado, setConectado] = useState(false);
 
-  // ---------- CARGAR DATOS ----------
-
-  // Pide inventario, carga y estado de la misión al mismo tiempo.
   async function cargarDatos() {
     try {
       const [datosInventario, datosCarga, datosMision] = await Promise.all([
@@ -63,14 +52,11 @@ function AstroLogistics() {
     }
   }
 
-  // Se ejecuta una sola vez, cuando la página se abre.
   useEffect(() => {
     cargarDatos();
   }, []);
 
-  // Cuenta regresiva: cada segundo le restamos 1 al tiempo.
   useEffect(() => {
-    // Si ya no queda tiempo o la carga está confirmada, dejamos de contar.
     if (segundosRestantes <= 0 || carga.confirmada) {
       return;
     }
@@ -79,13 +65,9 @@ function AstroLogistics() {
       setSegundosRestantes(segundosRestantes - 1);
     }, 1000);
 
-    // Limpieza: cancelamos el temporizador anterior antes de crear otro.
     return () => clearTimeout(temporizador);
   }, [segundosRestantes, carga.confirmada]);
 
-  // ---------- ACCIONES DEL CAPITÁN ----------
-
-  // Endpoint 3: añade 1 unidad del suministro a la nave.
   async function manejarAgregar(id) {
     setError("");
     setCargando(true);
@@ -99,7 +81,6 @@ function AstroLogistics() {
     }
   }
 
-  // Endpoint 4: sube o baja las unidades de un suministro (botones + y -).
   async function manejarCambiarUnidades(id, nuevaCantidad) {
     setError("");
     setCargando(true);
@@ -113,7 +94,6 @@ function AstroLogistics() {
     }
   }
 
-  // Endpoint 5: quita el suministro de la nave (botón Desembarcar).
   async function manejarDesembarcar(id) {
     setError("");
     setCargando(true);
@@ -127,7 +107,6 @@ function AstroLogistics() {
     }
   }
 
-  // Confirma el equipamiento y bloquea la carga.
   async function manejarConfirmar() {
     setError("");
     setCargando(true);
@@ -141,7 +120,6 @@ function AstroLogistics() {
     }
   }
 
-  // Inicia una misión nueva: vacía la nave y reinicia el tiempo.
   async function manejarNuevaMision() {
     setError("");
     setCargando(true);
@@ -155,17 +133,10 @@ function AstroLogistics() {
     }
   }
 
-  // ---------- VALORES CALCULADOS ----------
-
-  // Se acabó el tiempo y la carga no se confirmó: la sesión se cierra.
   const tiempoAgotado = conectado && segundosRestantes === 0 && !carga.confirmada;
 
-  // Los botones se bloquean mientras esperamos al servidor o si ya se confirmó.
   const bloqueado = cargando || carga.confirmada;
 
-  // ---------- PANTALLAS ----------
-
-  // 1) Todavía no hay datos del backend.
   if (!conectado) {
     return (
       <Container className="py-5 text-center">
@@ -243,7 +214,6 @@ function AstroLogistics() {
   );
 }
 
-//Reactor
 function App() {
   const [pantalla, setPantalla] = useState("reactor");
   return (

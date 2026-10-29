@@ -4,7 +4,6 @@ import { ajustarTemperatura, reiniciarReactor } from "./services/reactorApi.js";
 
 export default function Reactor() {
   const [temperatura, setTemperatura] = useState("");
-  // Cada intento conserva la temperatura y la respuesta del servidor.
   const [historial, setHistorial] = useState([]);
   const [mensaje, setMensaje] = useState("");
   const [estabilizado, setEstabilizado] = useState(false);

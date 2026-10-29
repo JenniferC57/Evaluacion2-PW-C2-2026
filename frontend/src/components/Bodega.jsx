@@ -11,7 +11,6 @@ import {
   Alert,
 } from "reactstrap";
 
-// Bodega de carga: lo que el capitán ya subió a la nave.
 function Bodega({
   inventario,
   carga,
@@ -22,8 +21,6 @@ function Bodega({
   onConfirmar,
   onNuevaMision,
 }) {
-  // El backend solo manda { id, cantidad } de cada item cargado,
-  // así que buscamos el nombre y el precio en el inventario.
   const items = carga.itemsCargados.map((item) => {
     const suministro = inventario.find((s) => s.id === item.id);
     return {
@@ -34,7 +31,6 @@ function Bodega({
     };
   });
 
-  // Sumamos todas las unidades que van en la nave.
   const totalUnidades = items.reduce((suma, item) => suma + item.cantidad, 0);
 
   return (
@@ -59,7 +55,6 @@ function Bodega({
                 </small>
 
                 <div className="d-flex justify-content-between align-items-center mt-2">
-                  {/* Botones - y + : llaman al Endpoint 4 con la nueva cantidad */}
                   <ButtonGroup size="sm">
                     <Button
                       color="secondary"
@@ -82,7 +77,6 @@ function Bodega({
                     </Button>
                   </ButtonGroup>
 
-                  {/* Desembarcar: llama al Endpoint 5 */}
                   <Button
                     color="danger"
                     outline
