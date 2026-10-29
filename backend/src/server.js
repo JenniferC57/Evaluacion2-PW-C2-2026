@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-app.use("/", reactorRoutes); 
+app.use("/", reactorRoutes);
 app.use("/api", astrologisticsRoutes);
 
 app.listen(PORT, () => {

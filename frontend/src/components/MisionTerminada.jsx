@@ -1,6 +1,5 @@
 import { Card, CardBody, CardTitle, CardText, Button } from "reactstrap";
 
-// Pantalla que aparece cuando se acaba el tiempo sin confirmar la carga.
 function MisionTerminada({ onNuevaMision, cargando }) {
   return (
     <Card className="text-center mx-auto shadow-sm" style={{ maxWidth: "520px" }}>

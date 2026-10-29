@@ -1,6 +1,5 @@
 import { Row, Col, Card, CardBody, CardTitle, CardSubtitle, Badge, Button } from "reactstrap";
 
-// Catálogo de la base: una tarjeta por cada suministro del inventario.
 function Catalogo({ inventario, bloqueado, onAgregar }) {
   return (
     <Row>
@@ -20,7 +19,6 @@ function Catalogo({ inventario, bloqueado, onAgregar }) {
                 Stock disponible: <strong>{suministro.stock}</strong>
               </p>
 
-              {/* Si no hay stock el botón se desactiva; si hay, llama al Endpoint 3 */}
               {suministro.stock === 0 ? (
                 <Button color="secondary" disabled className="w-100">
                   Agotado en Base
